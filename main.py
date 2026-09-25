@@ -13,7 +13,7 @@ import numpy as np
 import sounddevice as sd
 
 # ==================== 配置区 ====================
-THRESHOLD_DB  = -35.0    # 触发阈值（dBFS）：0 为最大，越负越安静。-30 约等于正常说话
+THRESHOLD_DB  = -30.0    # 触发阈值（dBFS）：0 为最大，越负越安静。-30 约等于正常说话
 TARGET_VOLUME = 0.5     # 触发后把系统音量设为 25%（0.0 ~ 1.0）
 RESTORE       = True     # 安静一段时间后，是否恢复原来的音量
 RESTORE_AFTER = 3.0      # 安静多少秒后恢复（秒）
@@ -21,7 +21,7 @@ SAMPLE_RATE   = 48000    # 采样率
 BLOCK_SIZE    = 1024     # 每块采样点数（约 21ms）
 COOLDOWN      = 1.0      # 两次触发的最小间隔（秒），防止抖动
 SMOOTH        = 0.7      # 响度平滑系数（0~1，越大越平滑、反应越慢）
-DEBUG         = False    # True 时只打印响度、不调音量（用于校准阈值）
+DEBUG         = True    # True 时只打印响度、不调音量（用于校准阈值）
 # ===============================================
 
 
@@ -107,8 +107,7 @@ def main():
 
             now = time.time()
 
-            if DEBUG:
-                print(f"\r响度: {level_db:7.1f} dBFS", end="", flush=True)
+            print(f"\r响度: {level_db:7.1f} dBFS", end="", flush=True)
 
             # ---- 超过阈值：调低音量 ----
             if level_db > THRESHOLD_DB and (now - last_trigger) >= COOLDOWN:
